@@ -69,4 +69,4 @@ requires:
   TheSchwartz: 0
   URI::Find::UTF8: 0
   YAML: 0
-version: 0.1.5
+version: 0.1.6
