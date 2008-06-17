@@ -11,7 +11,6 @@ requires 'Template';
 requires 'DBIx::Class';
 requires 'Catalyst' => '5.64';
 requires 'Digest';
-requires 'Switch';
 requires 'DateTime';
 requires 'File::Path';
 requires 'File::Copy';
@@ -22,8 +21,7 @@ requires 'Catalyst::View::TT';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Plugin::Static::Simple';
-requires 'YAML';
-requires 'Catalyst::Plugin::Config::YAML';
+requires 'Catalyst::Plugin::Config::YAML::XS';
 requires 'Cache::FileCache';
 requires 'Catalyst::Plugin::Cache';
 requires 'Catalyst::Plugin::PageCache';
@@ -68,9 +66,6 @@ requires 'HTML::BBCode' => '2.00';
 requires 'Text::Textile';
 requires 'URI::Find::UTF8';
 requires 'Text::GooglewikiFormat' => '0.04';
-
-# db debug
-recommends 'Catalyst::Model::DBIC::Schema::QueryLog';
 
 catalyst;
 

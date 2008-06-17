@@ -12,7 +12,7 @@ use Foorum::Scraper::MailMan;
 use Foorum::Utils qw/encodeHTML/;
 use POSIX qw(strftime);
 use File::Spec;
-use YAML qw/LoadFile/;
+use YAML::XS qw/LoadFile/;
 my ( undef, $path ) = File::Spec->splitpath(__FILE__);
 my $scraper_config = LoadFile("$path/../../../../conf/scraper.yml");
 
@@ -199,8 +199,10 @@ sub get_topic_or_create {
                 columns  => ['comment_id'],
             }
         )->first;
-        my $reply_to = $rs->comment_id;
-        return ( $topic->topic_id, $reply_to );
+        if ($rs) {
+            my $reply_to = $rs->comment_id;
+            return ( $topic->topic_id, $reply_to );
+        }
     }
 
     # or else, create one
