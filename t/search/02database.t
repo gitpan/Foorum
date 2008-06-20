@@ -17,14 +17,12 @@ use Foorum::TestUtils qw/schema base_path/;
 
 my $schema = schema();
 
-use Foorum::Search;
+use Foorum::Search::Database;
 
-my $search = new Foorum::Search;
+my $search = new Foorum::Search::Database;
 
 # use database
-$search->{sphinx}       = undef;
-$search->{use_sphinx}   = 0;
-$search->{db}->{schema} = $schema;
+$search->{schema} = $schema;
 
 ##################################
 # Forum Tests

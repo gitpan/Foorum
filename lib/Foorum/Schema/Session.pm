@@ -19,15 +19,6 @@ __PACKAGE__->add_columns(
   },
   "expires",
   { data_type => "INT", default_value => 0, is_nullable => 1, size => 11 },
-  "user_id",
-  { data_type => "INT", default_value => 0, is_nullable => 0, size => 11 },
-  "path",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 255,
-  },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -62,21 +53,9 @@ INT(11)
 
 
 
-=item user_id
-
-INT(11)
-
-NOT NULL
-
-=item path
-
-VARCHAR(255)
-
-
-
 =back
 
-=head2 AUTHOR
+=head1 AUTHOR
 
 Fayland Lam <fayland at gmail.com>
 
