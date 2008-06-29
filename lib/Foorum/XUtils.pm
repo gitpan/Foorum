@@ -25,7 +25,7 @@ my ( undef, $path ) = File::Spec->splitpath(__FILE__);
 
 sub base_path {
     return $base_path if ($base_path);
-    $base_path = abs_path("$path/../../");
+    $base_path = abs_path( File::Spec->catdir( $path, '..', '..' ) );
     return $base_path;
 }
 
@@ -33,9 +33,10 @@ sub config {
 
     return $config if ($config);
 
-    $config = LoadFile("$path/../../foorum.yml");
-    if ( -e "$path/../../foorum_local.yml" ) {
-        my $extra_config = LoadFile("$path/../../foorum_local.yml");
+    $config = LoadFile( File::Spec->catfile( $path, '..', '..', 'foorum.yml' ) );
+    if ( -e File::Spec->catfile( $path, '..', '..', 'foorum_local.yml' ) ) {
+        my $extra_config
+            = LoadFile( File::Spec->catfile( $path, '..', '..', 'foorum_local.yml' ) );
         $config = { %$config, %$extra_config };
     }
 
@@ -65,7 +66,7 @@ sub tt2 {
     $base_path = base_path() unless ($base_path);
 
     $tt2 = Template->new(
-        {   INCLUDE_PATH => ["$base_path/templates"],
+        {   INCLUDE_PATH => [ File::Spec->catdir( $base_path, 'templates' ) ],
             PRE_CHOMP    => 1,
             POST_CHOMP   => 1,
             STASH        => Template::Stash::XS->new,

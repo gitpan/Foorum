@@ -11,7 +11,8 @@ BEGIN {
 }
 
 use FindBin;
-use lib "$FindBin::Bin/../lib";
+use File::Spec;
+use lib File::Spec->catdir( $FindBin::Bin, '..', 'lib' );
 use Foorum::TestUtils qw/schema cache base_path/;
 use File::Path;
 use File::Copy ();
@@ -22,16 +23,18 @@ my $cache     = cache();
 my $base_path = base_path();
 
 my $upload_res  = $schema->resultset('Upload');
-my $upload_file = "$base_path/t/schema/upload/test.txt";
+my $upload_file = File::Spec->catfile( $base_path, 't', 'schema', 'upload', 'test.txt' );
 my $upload_id   = 1;
 my $directory_1 = int( $upload_id / 3200 / 3200 );
 my $directory_2 = int( $upload_id / 3200 );
-my $upload_dir  = "$base_path/root/upload/$directory_1/$directory_2";
+my $upload_dir
+    = File::Spec->catdir( $base_path, 'root', 'upload', $directory_1, $directory_2 );
 my @created;
+
 unless ( -e $upload_dir ) {
     @created = mkpath( [$upload_dir], 0, 0777 );    ## no critic (ProhibitLeadingZeros)
 }
-my $dest_file = "$upload_dir/test.txt";
+my $dest_file = File::Spec->catfile( $upload_dir, 'test.txt' );
 
 # create data, TODO. add_file need use $upload based on Catalyst::Request::Upload
 sub create_data {
@@ -84,9 +87,14 @@ ok( not( -e $dest_file ), 'after remove_by_upload file deleted' );
 use File::Copy ();
 
 END {
+
+    # Keep Database the same from original
+    use File::Copy ();
     my $base_path = base_path();
-    File::Copy::copy( "$base_path/t/lib/Foorum/backup.db",
-        "$base_path/t/lib/Foorum/test.db" );
+    File::Copy::copy(
+        File::Spec->catfile( $base_path, 't', 'lib', 'Foorum', 'backup.db' ),
+        File::Spec->catfile( $base_path, 't', 'lib', 'Foorum', 'test.db' )
+    );
 
     if ( scalar @created ) {
         remove \1, @created;

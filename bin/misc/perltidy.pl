@@ -6,8 +6,9 @@ use Cwd qw/abs_path/;
 use Perl::Tidy;
 use File::Next;
 use File::Copy;
+use File::Spec;
 
-my $path = abs_path("$RealBin/../..");
+my $path = abs_path( File::Spec->catdir($RealBin, '..', '..') );
 
 my $files = File::Next::files( $path );
 
@@ -23,7 +24,7 @@ while ( defined ( my $file = $files->() ) ) {
     Perl::Tidy::perltidy(
         source            => $file,
         destination       => $tidyfile,
-        perltidyrc        => "$RealBin/.perltidyrc",
+        perltidyrc        => File::Spec->catfile( $RealBin, '.perltidyrc' ),
     );
     move($tidyfile, $file);
 }
