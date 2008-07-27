@@ -99,9 +99,6 @@ sub work {
                     scalar @populate_contents - 1 );
                 $last_post_id = $topic_id;
                 foreach my $content (@populate_contents) {
-
-                    # XXX? fix the Scraper encoding issue (TODO)
-
                     my $text
                         = qq~<p><strong>$content->{who}</strong> posted on <i>$content->{when}</i>:</p><pre>$content->{text}</pre>~;
                     my $comment = $schema->resultset('Comment')->create(
@@ -139,9 +136,11 @@ sub work {
         # update last_msg_id
         update_last_scraped_msg_id( $schema, "scraper-mailman-$name", $last_msg_id );
 
-        # update threads|replies count for forum
+        # update threads|replies count for forum and user
         if ( $is_changed and $last_post_id ) {
             update_forum( $schema, $cache, $forum_id, $last_post_id );
+            my $user = $schema->resultset('User')->get( { user_id => $user_id } );
+            $schema->resultset('User')->update_threads_and_replies($user);
         }
     }
 
