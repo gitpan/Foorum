@@ -6,8 +6,7 @@ abstract        ('Foorum - forum system based on Catalyst');
 license         ('perl');
 version_from    ('lib/Foorum/Version.pm');
 
-requires 'Template::Plugin::Math'; # Template 2.19 don't contain this one.
-requires 'Template';
+requires 'Template' => '2.20';
 requires 'DBIx::Class';
 requires 'Catalyst' => '5.64';
 requires 'Digest';
@@ -37,8 +36,7 @@ requires 'Catalyst::Plugin::Session::Store::DBIC';
 requires 'Catalyst::Plugin::Session::DynamicExpiry';
 requires 'Catalyst::Plugin::FormValidator::Simple';
 requires 'Catalyst::Plugin::Captcha';
-requires 'I18N::LangTags'; # for I18N::LangTags::Detect
-requires 'Catalyst::Plugin::I18N';
+requires 'Catalyst::Plugin::I18N' => '0.08';
 requires 'Template::Plugin::FillInForm';
 requires 'Template::Plugin::Date';
 requires 'File::Remove';
@@ -54,7 +52,9 @@ requires 'Sphinx::Search';
 # cron
 requires 'TheSchwartz';
 requires 'Schedule::Cron';
-requires 'Proc::PID::File';
+if ($^O ne 'MSWin32') {
+    recommends 'Proc::PID::File';
+}
 requires 'File::HomeDir';
 
 # cron/misc|db

@@ -14,7 +14,9 @@ use POSIX qw(strftime);
 use File::Spec;
 use Encode qw/from_to/;
 use YAML::XS qw/LoadFile/;
+use Cwd qw/abs_path/;
 my ( undef, $path ) = File::Spec->splitpath(__FILE__);
+$path = abs_path($path);
 my $scraper_config = LoadFile(
     File::Spec->catfile( $path, '..', '..', '..', '..', 'conf', 'scraper.yml' ) );
 
@@ -23,6 +25,8 @@ my @FullName_months = (
     'June', 'July',    'August',   'September', 'October', 'November',
     'December'
 );
+
+my @Re_s = ( 'Re\:', '答复\:' );
 
 sub work {
     my $class = shift;
@@ -184,7 +188,9 @@ sub get_topic_or_create {
     my ( $schema, $forum_id, $title, $user_id, $replies_no ) = @_;
 
     # trim 'Re:\s+'
-    $title =~ s/^Re\:\s+//isg;
+    foreach my $tre (@Re_s) {
+        $title =~ s/^$tre\s+//isg;
+    }
 
     my $topic = $schema->resultset('Topic')->search(
         {   title    => { 'LIKE', $title },

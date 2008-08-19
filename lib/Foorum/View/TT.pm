@@ -9,7 +9,7 @@ use File::Spec;
 #use Template::Constants qw( :debug );
 use NEXT;
 use HTML::Email::Obfuscate;
-use Foorum::Utils qw/decodeHTML/;
+use Foorum::Utils qw/decodeHTML be_url_part/;
 use Locale::Country::Multilingual;
 use vars qw/$lcm $Email/;
 
@@ -22,12 +22,13 @@ __PACKAGE__->config(
     #DEBUG        => DEBUG_PARSER | DEBUG_PROVIDER,
     INCLUDE_PATH =>
         [ Foorum->path_to( 'templates', 'custom' ), Foorum->path_to('templates') ],
-    COMPILE_DIR => $tmpdir . "/ttcache/$<",
+    COMPILE_DIR => File::Spec->catdir( $tmpdir, 'ttcache', $< ),
     COMPILE_EXT => '.ttp1',
     STASH       => Template::Stash::XS->new,
     FILTERS     => {
         email_obfuscate => sub               { $Email->escape_html(shift) },
         decodeHTML      => sub               { decodeHTML(shift) },
+        be_url_part     => sub               { be_url_part(shift) },
         code2country    => [ \&code2country, 1 ],
     }
 );

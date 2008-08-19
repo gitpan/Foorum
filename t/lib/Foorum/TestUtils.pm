@@ -5,6 +5,7 @@ use warnings;
 use YAML::XS qw/LoadFile/;    # config
 use Foorum::Schema;           # schema
 use Cache::FileCache;         # cache
+use File::Copy ();
 use base 'Exporter';
 use vars qw/@EXPORT_OK $config $cache $base_path/;
 @EXPORT_OK = qw/
@@ -12,11 +13,13 @@ use vars qw/@EXPORT_OK $config $cache $base_path/;
     schema
     cache
     base_path
+    rollback_db
     /;
 
 use File::Spec;
 use Cwd qw/abs_path/;
 my ( undef, $path ) = File::Spec->splitpath(__FILE__);
+$path = abs_path($path);
 
 sub base_path {
     return $base_path if ($base_path);
@@ -73,6 +76,15 @@ sub cache {
     );
 
     return $cache;
+}
+
+sub rollback_db {
+
+    # Keep Database the same from original
+    File::Copy::copy(
+        File::Spec->catfile( $path, 'backup.db' ),
+        File::Spec->catfile( $path, 'test.db' )
+    );
 }
 
 1;
