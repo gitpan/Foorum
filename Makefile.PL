@@ -16,7 +16,6 @@ requires 'File::Path';
 requires 'File::Copy';
 requires 'List::Util';
 requires 'List::MoreUtils';
-requires 'Sub::Install'; # thanks for sai
 requires 'Catalyst::View::TT';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::Model::DBIC::Schema';
@@ -24,7 +23,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Config::YAML::XS';
 requires 'Cache::FileCache';
 requires 'Catalyst::Plugin::Cache';
-requires 'Catalyst::Plugin::PageCache';
+requires 'Catalyst::Plugin::PageCache' => '0.19';
 requires 'Set::Object';
 requires 'Catalyst::Plugin::Authentication' => '0.10004';
 requires 'Catalyst::Plugin::Authentication::Credential::Password';
@@ -50,7 +49,8 @@ requires 'Net::CIDR::Lite';
 requires 'Sphinx::Search';
 
 # cron
-requires 'TheSchwartz';
+requires 'TheSchwartz::Simple';
+requires 'MooseX::TheSchwartz';
 requires 'Schedule::Cron';
 if ($^O ne 'MSWin32') {
     recommends 'Proc::PID::File';

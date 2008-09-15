@@ -275,7 +275,7 @@ sub create_comment {
         my $from = $schema->resultset('User')->get( { user_id => $user_id } );
 
         # Send Notification Email
-        $schema->resultset('Email')->create_email(
+        $schema->resultset('ScheduledEmail')->create_email(
             {   template => 'new_comment',
                 to       => $rept->{email},
                 lang     => $lang,
@@ -367,6 +367,33 @@ sub remove_one_item {
     $self->search( { comment_id => $comment->{comment_id} } )->delete;
 
     return 1;
+}
+
+sub validate_params {
+    my ( $self, $params ) = @_;
+
+    my $schema = $self->result_source->schema;
+
+    my $title = $params->{'title'};
+    my $text  = $params->{'text'};
+    unless ( $title and length($title) < 80 ) {
+        return 'ERROR_TITLE_LENGTH';
+    } else {
+        my $bad_word = $schema->resultset('FilterWord')->has_bad_word($title);
+        if ( $bad_word ne '0' ) {
+            return "BAD_TITLE_$bad_word";
+        }
+    }
+    unless ( length($text) ) {
+        return 'ERROR_TEXT_REQUIRED';
+    } else {
+        my $bad_word = $schema->resultset('FilterWord')->has_bad_word($text);
+        if ( $bad_word ne '0' ) {
+            return "BAD_TEXT_$bad_word";
+        }
+    }
+
+    return 0;
 }
 
 1;
