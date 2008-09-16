@@ -10,22 +10,20 @@ use File::Spec;
 use MooseX::TheSchwartz;      # theschwartz
 use DBI;
 use base 'Exporter';
-use vars qw/@EXPORT_OK $theschwartz $cron_config/;
+use vars qw/@EXPORT_OK $cron_config/;
 @EXPORT_OK = qw/ theschwartz cron_config /;
 use Foorum::XUtils qw/config base_path/;
 
 sub theschwartz {
 
-    return $theschwartz if ($theschwartz);
-
     my $config = config();
-    my $dbh    = DBI->connect(
+    my $dbh    = DBI->connect_cached(
         $config->{theschwartz_dsn},
         $config->{theschwartz_user} || $config->{dsn_user},
         $config->{theschwartz_pwd}  || $config->{dsn_pwd},
         { PrintError => 1, RaiseError => 1 }
     );
-    $theschwartz = MooseX::TheSchwartz->new( databases => [$dbh] );
+    my $theschwartz = MooseX::TheSchwartz->new( databases => [$dbh] );
 
     return $theschwartz;
 }
