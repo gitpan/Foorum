@@ -67,7 +67,7 @@ requires 'Perl::Critic';
 requires 'Perl::Tidy';
 requires 'SQL::Translator';
 requires 'DBICx:::AutoDoc';
-requires 'Pod::From::GoogleWiki';
+requires 'Pod::From::GoogleWiki' => '0.05';
 
 # mail
 requires 'MIME::Entity';
@@ -75,7 +75,6 @@ requires 'Email::Send';
 recommends 'Email::Send::SMTP::TLS';
 
 # formatter
-requires 'HTML::BBCode' => '2.00';
 requires 'Text::Textile';
 requires 'URI::Find::UTF8';
 requires 'Text::GooglewikiFormat' => '0.04';
