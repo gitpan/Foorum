@@ -25,8 +25,8 @@ sub get {
     }
 
     if ( $attrs->{with_author} ) {
-        $topic->{author}
-            = $schema->resultset('User')->get( { user_id => $topic->{author_id} } );
+        $topic->{author} = $schema->resultset('User')
+            ->get( { user_id => $topic->{author_id} } );
     }
 
     return $topic;
@@ -49,6 +49,16 @@ sub create_topic {
         }
     );
 
+    # update user stat
+    my $user = $schema->resultset('User')
+        ->get( { user_id => $create->{author_id} } );
+    $schema->resultset('User')->update_user(
+        $user,
+        {   threads => \'threads + 1',
+            point   => \'point + 2',
+        }
+    );
+
     return $topic;
 }
 
@@ -64,18 +74,22 @@ sub update_topic {
 }
 
 sub remove {
-    my ( $self, $forum_id, $topic_id, $info ) = @_;
+    my ( $self, $topic_id, $info ) = @_;
 
     my $schema = $self->result_source->schema;
     my $cache  = $schema->cache();
+
+    my $topic = $self->get($topic_id);
+
+    return 0 unless ($topic);
 
     # delete topic
     $self->search( { topic_id => $topic_id } )->delete;
     $cache->remove("topic|topic_id=$topic_id");
 
     # delete comments with upload
-    my $total_replies
-        = $schema->resultset('Comment')->remove_by_object( 'topic', $topic_id );
+    my $total_replies = $schema->resultset('Comment')
+        ->remove_by_object( 'topic', $topic_id );
 
     # since one comment is topic indeed. so total_replies = delete_counts - 1
     $total_replies-- if ( $total_replies > 0 );
@@ -92,6 +106,8 @@ sub remove {
         }
     )->delete;
 
+    my $forum_id = $topic->{forum_id};
+
     # log action
     my $user_id = $info->{operator_id} || 0;
     $schema->resultset('LogAction')->create(
@@ -107,7 +123,8 @@ sub remove {
 
     # update last
     my $lastest = $self->search( { forum_id => $forum_id },
-        { order_by => \'last_update_date DESC', columns => ['topic_id'] } )->first;
+        { order_by => \'last_update_date DESC', columns => ['topic_id'] } )
+        ->first;    #'
     my $last_post_id = $lastest ? $lastest->topic_id : 0;
     $schema->resultset('Forum')->update_forum(
         $forum_id,
@@ -116,6 +133,19 @@ sub remove {
             total_replies => \"total_replies - $total_replies",
         }
     );
+
+    # update user stat
+    my $user = $schema->resultset('User')
+        ->get( { user_id => $topic->{author_id} } );
+    my $remove_point = ( $topic->{elite} ) ? 6 : 2;
+    $schema->resultset('User')->update_user(
+        $user,
+        {   threads => \'threads - 1',              #'
+            point   => \"point - $remove_point",    #"
+        }
+    );
+
+    return 1;
 }
 
 1;

@@ -7,13 +7,16 @@ use Test::More;
 BEGIN {
     eval { require DBD::SQLite }
         or plan skip_all => "DBD::SQLite is required for this test";
-    plan tests           => 17;
+    $ENV{TEST_FOORUM} = 1;
+    plan tests => 20;
 }
 
 use FindBin;
 use File::Spec;
 use lib File::Spec->catdir( $FindBin::Bin, '..', 'lib' );
-use Foorum::TestUtils qw/schema cache rollback_db/;
+use Foorum::SUtils qw/schema/;
+use Foorum::XUtils qw/cache/;
+use Foorum::TestUtils qw/rollback_db/;
 use Foorum::Utils qw/encodeHTML/;
 my $schema = schema();
 my $cache  = cache();
@@ -37,6 +40,12 @@ $schema->resultset('ForumSettings')->create(
         value    => 'N',
     }
 );
+$schema->resultset('ForumSettings')->create(
+    {   forum_id => 1,
+        type     => 'create_time',
+        value    => '123456',
+    }
+);
 $cache->remove("forum|forum_id=1");
 
 # test get
@@ -49,16 +58,32 @@ is( $forum->{name},       'FoorumTest',      'name OK' );
 is( $forum->{forum_url},  '/forum/test1111', 'forum_url OK' );
 
 # test forum_settings
-is( $forum->{settings}->{can_post_threads}, 'N', 'settings can_post_threads OK' );
+is( $forum->{settings}->{can_post_threads},
+    'N', 'settings can_post_threads OK' );
+is( $forum->{settings}->{create_time},
+    undef, 'by default, we do NOT get create_time forum settings' );
+
+# get all forum_settings
+my $settings = $forum_res->get_forum_settings( $forum, { all => 1 } );
+is( scalar keys %$settings, 2, 'get 2 settings' );
+is_deeply(
+    $settings,
+    {   can_post_threads => 'N',
+        create_time      => 123456
+    },
+    'get_forum_settings all => 1 OK'
+);
 
 # test update
-$forum_res->update_forum( 1, { name => 'FoorumTest2', forum_code => 'test2222' } );
+$forum_res->update_forum( 1,
+    { name => 'FoorumTest2', forum_code => 'test2222' } );
 $forum  = $forum_res->get(1);            # by forum_id;
 $forum2 = $forum_res->get('test2222');
 is_deeply( $forum, $forum2,
     'get by forum_id and forum_code is the same after update_forum' );
-is( $forum->{name},      'FoorumTest2',     'name OK after update_forum' );
-is( $forum->{forum_url}, '/forum/test2222', 'forum_url OK after update_forum' );
+is( $forum->{name}, 'FoorumTest2', 'name OK after update_forum' );
+is( $forum->{forum_url}, '/forum/test2222',
+    'forum_url OK after update_forum' );
 
 # test remove
 $forum_res->remove_forum(1);

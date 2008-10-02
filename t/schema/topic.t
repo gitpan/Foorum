@@ -7,13 +7,16 @@ use Test::More;
 BEGIN {
     eval { require DBD::SQLite }
         or plan skip_all => "DBD::SQLite is required for this test";
-    plan tests           => 13;
+    $ENV{TEST_FOORUM} = 1;
+    plan tests => 13;
 }
 
 use FindBin;
 use File::Spec;
 use lib File::Spec->catdir( $FindBin::Bin, '..', 'lib' );
-use Foorum::TestUtils qw/schema cache rollback_db/;
+use Foorum::SUtils qw/schema/;
+use Foorum::XUtils qw/cache/;
+use Foorum::TestUtils qw/rollback_db/;
 use Foorum::Utils qw/encodeHTML/;
 my $schema = schema();
 my $cache  = cache();
@@ -52,8 +55,8 @@ cmp_ok( $topic->{post_on}, '<=', time(),   'topic.post_on <= now' );
 # test update_topic
 $topic_res->update_topic( 1, { title => 'test title2', author_id => 2 } );
 $topic = $topic_res->get(1);
-is( $topic->{title},     'test title2', 'get title OK after update_topic' );
-is( $topic->{author_id}, 2,             'get author_id OK after update_topic' );
+is( $topic->{title}, 'test title2', 'get title OK after update_topic' );
+is( $topic->{author_id}, 2, 'get author_id OK after update_topic' );
 
 # be Sure forum is there before remove topic
 $schema->resultset('Forum')->create(
@@ -71,7 +74,7 @@ $schema->resultset('Forum')->create(
 
 # test remove
 $topic_res->remove(
-    1, 1,
+    1,
     {   operator_id => 2,
         log_text    => 'delete for test',
     }

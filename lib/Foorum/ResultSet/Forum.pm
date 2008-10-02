@@ -32,10 +32,11 @@ sub get {
             $cache->set( $mem_key, $mem_val, 36000 );    # 10 hours
 
             # set cache
-            $forum              = $forum->{_column_data};              # hash for cache
+            $forum = $forum->{_column_data};             # hash for cache
             $forum->{settings}  = $self->get_forum_settings($forum);
             $forum->{forum_url} = $self->get_forum_url($forum);
-            $cache->set( "forum|forum_id=$forum_id", { val => $forum, 1 => 2 }, 7200 );
+            $cache->set( "forum|forum_id=$forum_id",
+                { val => $forum, 1 => 2 }, 7200 );
         }
     }
 
@@ -52,10 +53,11 @@ sub get {
             return unless ($forum);
 
             # set cache
-            $forum              = $forum->{_column_data};              # hash for cache
+            $forum = $forum->{_column_data};    # hash for cache
             $forum->{settings}  = $self->get_forum_settings($forum);
             $forum->{forum_url} = $self->get_forum_url($forum);
-            $cache->set( "forum|forum_id=$forum_id", { val => $forum, 1 => 2 }, 7200 );
+            $cache->set( "forum|forum_id=$forum_id",
+                { val => $forum, 1 => 2 }, 7200 );
         }
     }
 
@@ -71,19 +73,25 @@ sub get_forum_url {
 }
 
 sub get_forum_settings {
-    my ( $self, $forum ) = @_;
+    my ( $self, $forum, $opts ) = @_;
 
     my $schema   = $self->result_source->schema;
     my $forum_id = $forum->{forum_id};
 
-    # get forum settings
-    my $settings_rs
-        = $schema->resultset('ForumSettings')->search( { forum_id => $forum_id } );
-    my $settings = {    # default
-        can_post_threads => 'Y',
-        can_post_replies => 'Y',
-        can_post_polls   => 'Y'
-    };
+    my $settings;
+
+    my @extra_cols;
+    if ( not exists $opts->{all} ) {
+        my @all_types = qw/can_post_threads can_post_replies can_post_polls/;
+        $settings->{$_} = 'Y' foreach (@all_types);
+        @extra_cols = ( type => { 'IN', \@all_types } );
+    }
+
+    my $settings_rs = $schema->resultset('ForumSettings')->search(
+        {   forum_id => $forum_id,
+            @extra_cols,
+        }
+    );
     while ( my $r = $settings_rs->next ) {
         $settings->{ $r->type } = $r->value;
     }
@@ -116,10 +124,12 @@ sub remove_forum {
     my $cache  = $schema->cache();
 
     $self->search( { forum_id => $forum_id, } )->delete;
-    $schema->resultset('LogAction')->search( { forum_id => $forum_id } )->delete;
+    $schema->resultset('LogAction')->search( { forum_id => $forum_id } )
+        ->delete;
 
     # remove user_forum
-    $schema->resultset('UserForum')->search( { forum_id => $forum_id } )->delete;
+    $schema->resultset('UserForum')->search( { forum_id => $forum_id } )
+        ->delete;
 
     # get all topic_ids
     my @topic_ids;
@@ -139,10 +149,10 @@ sub remove_forum {
     }
     $schema->resultset('Poll')->search( { forum_id => $forum_id, } )->delete;
     if ( scalar @poll_ids ) {
-        $schema->resultset('PollOption')->search( { poll_id => { 'IN', \@poll_ids }, } )
-            ->delete;
-        $schema->resultset('PollResult')->search( { poll_id => { 'IN', \@poll_ids }, } )
-            ->delete;
+        $schema->resultset('PollOption')
+            ->search( { poll_id => { 'IN', \@poll_ids }, } )->delete;
+        $schema->resultset('PollResult')
+            ->search( { poll_id => { 'IN', \@poll_ids }, } )->delete;
     }
 
     # comment and star/share
@@ -206,7 +216,8 @@ sub merge_forums {
     my $total_members = $old_forum->total_members;
     my @extra_cols;
     if ( $new_forum->policy eq 'private' ) {
-        @extra_cols = ( 'total_members', \"total_members + $total_members" );    #"
+        @extra_cols
+            = ( 'total_members', \"total_members + $total_members" );    #"
     }
     $self->search( { forum_id => $to_id, } )->update(
         {   total_topics  => \"total_topics  + $total_topics",
@@ -216,7 +227,8 @@ sub merge_forums {
     );
 
     # remove user_forum
-    $schema->resultset('UserForum')->search( { forum_id => $from_id } )->delete;
+    $schema->resultset('UserForum')->search( { forum_id => $from_id } )
+        ->delete;
 
     # topics
     $schema->resultset('Topic')->search( { forum_id => $from_id, } )
@@ -224,7 +236,7 @@ sub merge_forums {
 
     # FIXME!!!
     # need delete all topic_id cache object
-    # $=cache->remove("topic|topic_id=$topic_id");
+    # $c->cache->remove("topic|topic_id=$topic_id");
 
     # polls
     $schema->resultset('Poll')->search( { forum_id => $from_id, } )
@@ -289,7 +301,8 @@ sub validate_forum_code {
     my $schema = $self->result_source->schema;
 
     # forum_code_reserved
-    my @reserved = $schema->resultset('FilterWord')->get_data('forum_code_reserved');
+    my @reserved
+        = $schema->resultset('FilterWord')->get_data('forum_code_reserved');
     return 'HAS_RESERVED' if ( grep { lc($forum_code) eq lc($_) } @reserved );
 
     # unique
@@ -300,3 +313,83 @@ sub validate_forum_code {
 }
 
 1;
+__END__
+
+=pod
+
+=head1 NAME
+
+Foorum::ResultSet::Forum - Forum object
+
+=head1 FUNCTION
+
+=over 4
+
+=item get
+
+  $schema->resultset('Forum')->get( $forum_id );
+  $c->model('DBIC::User')->get( $forum_id );
+  $c->model('DBIC::User')->get( $forum_code );
+
+get() do not query database directly, it try to get from cache, if not exists, get from database and set a cache. (we may call it $forum_obj below)
+
+  {
+    forum_id   => 1,
+    forum_code => 'FoorumTest',
+    # other columns in database
+    forum_url  => '/forum/ForumTest',
+    settings   => {
+        can_post_threads => 'Y',
+        can_post_replies => 'N',
+        can_post_polls   => 'Y'
+    }
+  }
+
+I<settings> in the hash is from get_forum_settings below.
+
+return $HASHREF
+
+=item get_forum_settings($forum_obj, $opts)
+
+  $schema->resultset('Forum')->get_forum_settings( $forum );
+  $c->model('DBIC::Forum')->get_forum_settings( $forum, { all => 1 } );
+
+It gets the data from forum_settings table. by default, we only get the settings of my @all_types = qw/can_post_threads can_post_replies can_post_polls/;
+
+while pass $opts as { all => 1 } can get all forum settings including create_time and others
+
+return $HASHREF
+
+=item update_forum($forum_id, $update)
+
+  $schema->resultset('Forum')->update_forum( $forum_id, { last_post_id => $topic_id } );
+  $c->model('DBIC::Forum')->update_forum( $forum_id, { total_members => $members } );
+
+inside, it calls search( { forum_id => $forum_id } )->update($update) and remove cache in B<get>
+
+=item remove_forum($forum_id)
+
+  $schema->resultset('Forum')->remove_forum( $forum_id );
+
+delete all things belong to $forum, BE CAREFUL, it's un-recoverable.
+
+=item merge_forums($info)
+
+  $schema->resultset('Forum')->merge_forums( { from => $old_forum_id, to => $new_forum_id } );
+
+move things belong to $old_forum_id to $new_fourm_id
+
+=item validate_forum_code($forum_code)
+
+  $schema->resultset('Forum')->validate_forum_code( $forum_code );
+  $c->model('DBIC::Forum')->validate_forum_code( $forum_code );
+
+validate $forum_code, return nothing means OK while return $str is an error_code like 'LENGTH', 'HAS_RESERVED' and others.
+
+=back
+
+=head1 AUTHOR
+
+Fayland Lam <fayland at gmail.com>
+
+=cut

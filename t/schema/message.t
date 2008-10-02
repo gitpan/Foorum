@@ -7,13 +7,16 @@ use Test::More;
 BEGIN {
     eval { require DBD::SQLite }
         or plan skip_all => "DBD::SQLite is required for this test";
-    plan tests           => 4;
+    $ENV{TEST_FOORUM} = 1;
+    plan tests => 4;
 }
 
 use FindBin;
 use File::Spec;
 use lib File::Spec->catdir( $FindBin::Bin, '..', 'lib' );
-use Foorum::TestUtils qw/schema cache rollback_db/;
+use Foorum::SUtils qw/schema/;
+use Foorum::XUtils qw/cache/;
+use Foorum::TestUtils qw/rollback_db/;
 
 my $schema = schema();
 my $cache  = cache();
@@ -45,8 +48,13 @@ $cache->remove('global|message_unread_cnt|user_id=1');
 my $cnt = $message_res->get_unread_cnt(1);
 is( $cnt, 1, 'get_unread_cnt OK' );
 
-my $messages = $message_res->are_messages_unread( 1, [ $message->message_id ] );
-is_deeply( $messages, { $message->message_id => 1 }, 'are_messages_unread OK' );
+my $messages
+    = $message_res->are_messages_unread( 1, [ $message->message_id ] );
+is_deeply(
+    $messages,
+    { $message->message_id => 1 },
+    'are_messages_unread OK'
+);
 
 $message_res->remove_from_db( $message->message_id );
 my $count = $message_res->count( { from_id => 2, to_id => 1 } );

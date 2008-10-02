@@ -35,11 +35,31 @@ sub config {
 
     return $config if ($config);
 
-    $config = LoadFile( File::Spec->catfile( $path, '..', '..', 'foorum.yml' ) );
+    $config
+        = LoadFile( File::Spec->catfile( $path, '..', '..', 'foorum.yml' ) );
     if ( -e File::Spec->catfile( $path, '..', '..', 'foorum_local.yml' ) ) {
-        my $extra_config
-            = LoadFile( File::Spec->catfile( $path, '..', '..', 'foorum_local.yml' ) );
+        my $extra_config = LoadFile(
+            File::Spec->catfile( $path, '..', '..', 'foorum_local.yml' ) );
         $config = { %$config, %$extra_config };
+    }
+    if ( $ENV{TEST_FOORUM} ) {
+
+        # use SQLite and FileCache for test
+        my $sqlite_file
+            = File::Spec->catfile( $path, '..', '..', 't', 'lib', 'Foorum',
+            'foorum.db' );
+        $config->{dsn}      = "dbi:SQLite:dbname=$sqlite_file";
+        $config->{dsn_user} = '';
+        $config->{dsn_pwd}  = '';
+        $config->{cache}    = {
+            backends => {
+                default => {
+                    class              => 'Cache::FileCache',
+                    namespace          => 'FoorumTest',
+                    default_expires_in => 300
+                }
+            }
+        };
     }
 
     return $config;
