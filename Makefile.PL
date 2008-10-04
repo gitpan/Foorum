@@ -9,6 +9,7 @@ version_from    ('lib/Foorum/Version.pm');
 requires 'Template' => '2.20';
 requires 'DBIx::Class';
 requires 'Catalyst' => '5.64';
+requires 'Moose'    => '0.57';
 requires 'Digest';
 requires 'DateTime';
 requires 'Date::Calc';
@@ -24,7 +25,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Plugin::Config::YAML::XS';
 requires 'Cache::FileCache';
 requires 'Catalyst::Plugin::Cache';
-requires 'Catalyst::Plugin::PageCache' => '0.19';
+requires 'Catalyst::Plugin::PageCache' => '0.21';
 requires 'Set::Object';
 requires 'Catalyst::Plugin::Authentication' => '0.10004';
 requires 'Catalyst::Plugin::Authentication::Credential::Password';
@@ -45,12 +46,12 @@ requires 'Locale::Country::Multilingual' => '0.03'; # for tw lang
 #requires 'File::Slurp';
 requires 'Net::IP::Match::Regexp';
 requires 'Net::CIDR::Lite';
+requires 'WWW::Contact';
 
 # search
 requires 'Sphinx::Search';
 
 # cron
-requires 'TheSchwartz::Simple';
 requires 'MooseX::TheSchwartz';
 requires 'Schedule::Cron';
 if ($^O ne 'MSWin32') {
@@ -67,6 +68,8 @@ recommends 'Email::Send::SMTP::TLS';
 requires 'Text::Textile';
 requires 'URI::Find::UTF8';
 requires 'Text::GooglewikiFormat' => '0.04';
+
+tests ( join ' ', ( glob('t/*.t'), glob('t/*/*.t') ) );
 
 catalyst;
 

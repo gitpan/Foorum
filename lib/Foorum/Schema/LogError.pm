@@ -11,7 +11,7 @@ __PACKAGE__->add_columns(
   "error_id",
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "level",
-  { data_type => "ENUM", default_value => "debug", is_nullable => 0, size => 5 },
+  { data_type => "SMALLINT", default_value => 1, is_nullable => 0, size => 1 },
   "text",
   {
     data_type => "TEXT",
@@ -53,6 +53,52 @@ NOT NULL, PRIMARY KEY
 ENUM(5)
 
 NOT NULL, DEFAULT VALUE 'debug'
+
+=item text
+
+TEXT(65535)
+
+NOT NULL
+
+=item time
+
+INT(11)
+
+NOT NULL
+
+=back
+
+=head1 AUTHOR
+
+Fayland Lam <fayland at gmail.com>
+
+=cut
+
+
+1;
+__END__
+
+=pod
+
+=head1 NAME
+
+Foorum::Schema::LogError - Table 'log_error'
+
+=head1 COLUMNS
+
+=over 4
+
+=item error_id
+
+INT(11)
+
+NOT NULL, PRIMARY KEY
+
+=item level
+
+SMALLINT(1)
+
+NOT NULL, DEFAULT VALUE '1'
 
 =item text
 

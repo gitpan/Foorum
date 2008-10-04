@@ -72,7 +72,7 @@ CREATE INDEX "forum_id" on "forum" ("forum_id");
 CREATE TABLE "forum_settings" (
   "forum_id" bigint DEFAULT '0' NOT NULL,
   "type" character varying(48) NOT NULL,
-  "value" character varying(48) NOT NULL,
+  "value" character varying(255) NOT NULL,
   PRIMARY KEY ("forum_id", "type")
 );
 CREATE INDEX "forum_id2" on "forum_settings" ("forum_id");
@@ -120,7 +120,7 @@ CREATE INDEX "forum_id3" on "log_action" ("forum_id");
 --
 CREATE TABLE "log_error" (
   "error_id" serial NOT NULL,
-  "level" character varying(5) DEFAULT 'debug' NOT NULL,
+  "level" smallint DEFAULT '1' NOT NULL,
   "text" text NOT NULL,
   "time" bigint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("error_id")

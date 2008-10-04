@@ -25,6 +25,7 @@ cache:
 Plugin::PageCache:
   expires: 300
   set_http_headers: 1
+  disable_index: 1
   debug: 1
   auto_check_user: 1
   auto_cache:
@@ -103,7 +104,6 @@ logger:
 function_on:
   maintain: 0
   register: 1
-  activation: 1
   create_forum: 1
   scraper: 0
   page_cache: 1
@@ -131,7 +131,6 @@ dir:
 
 # For Foorum pm using
 mail:
-  on: 1
   from_email: 'foorumbbs.com@gmail.com'
   daily_report_email: 'foorumbbs.com@gmail.com'
 

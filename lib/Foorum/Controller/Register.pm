@@ -5,6 +5,7 @@ use warnings;
 use Foorum::Version; our $VERSION = $Foorum::VERSION;
 use base 'Catalyst::Controller';
 use Digest ();
+use WWW::Contact;
 
 sub auto : Private {
     my ( $self, $c ) = @_;
@@ -68,24 +69,18 @@ sub default : Private {
         }
     );
 
-    # redirect or forward
-    if (    $c->config->{mail}->{on}
-        and $c->config->{function_on}->{activation} ) {
+    # send activation code
+    $c->model('DBIC::ScheduledEmail')
+        ->send_activation( $user, 0, { lang => $c->stash->{lang} } );
 
-        # send activation code
-        $c->model('DBIC::ScheduledEmail')
-            ->send_activation( $user, 0, { lang => $c->stash->{lang} } );
-        $c->res->redirect("/register/activation/$username");   # to activation
-    } else {
-        $c->login( $username, $password );
-        $c->forward(
-            '/print_message',
-            [   {   msg => 'register success!',
-                    url => '/',
-                }
-            ]
-        );
-    }
+    $c->authenticate( { username => $username, password => $password } );
+    $c->forward(
+        '/print_message',
+        [   {   msg => 'register success!',
+                url => '/',
+            }
+        ]
+    );
 }
 
 sub activation : Local {
@@ -173,10 +168,6 @@ sub import_contacts : Local {
     );
     return unless ( $c->req->method eq 'POST' );
 
-    eval("use WWW::Contact;");    ## no critic (ProhibitStringyEval)
-    if ($@) {
-        $c->detach( '/print_error', ['ERROR_EMAIL_OFF'] );
-    }
     my $wc = WWW::Contact->new();
     my @contacts = $wc->get_contacts( $email, $c->req->param('password') );
 
