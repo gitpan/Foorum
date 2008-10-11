@@ -55,6 +55,7 @@
 /lib/Foorum/ResultSet/ForumSettings.pm source OK
 /lib/Foorum/ResultSet/Upload.pm source OK
 /lib/Foorum/ResultSet/Comment.pm source OK
+/lib/Foorum/ResultSet/SecurityCode.pm source OK
 /lib/Foorum/ResultSet/Visit.pm source OK
 /lib/Foorum/ResultSet/Message.pm source OK
 /lib/Foorum/ResultSet/FilterWord.pm source OK
@@ -86,6 +87,7 @@
 /bin/upgrade/0.2.0/scraper.pl source OK
 /bin/upgrade/0.2.7/up.pl source OK
 /bin/upgrade/0.2.8/up.pl source OK
+/bin/upgrade/0.2.9/up.pl source OK
 /bin/upgrade/0.1.5/up.pl source OK
 /bin/upgrade/0.1.7/up.pl source OK
 /bin/foorum_server.pl source OK
@@ -123,6 +125,7 @@
 /t/schema/message.t source OK
 /t/schema/hit.t source OK
 /t/schema/banned_ip.t source OK
+/t/schema/security_code.t source OK
 /t/schema/user_forum.t source OK
 /t/schema/topic.t source OK
 /t/schema/upload.t source OK
