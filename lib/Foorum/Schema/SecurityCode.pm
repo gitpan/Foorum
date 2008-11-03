@@ -2,36 +2,38 @@ package Foorum::Schema::SecurityCode;
 
 use strict;
 use warnings;
-use Foorum::Version;  our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
-__PACKAGE__->table("security_code");
+__PACKAGE__->load_components('Core');
+__PACKAGE__->table('security_code');
 __PACKAGE__->add_columns(
-  "security_code_id",
-  { data_type => "INT", default_value => 0, is_nullable => 0, size => 11 },
-  "user_id",
-  { data_type => "INT", default_value => 0, is_nullable => 0, size => 11 },
-  "type",
-  { data_type => "TINYINT", default_value => 0, is_nullable => 0, size => 1 },
-  "code",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 12,
-  },
-  "time",
-  { data_type => "INT", default_value => 0, is_nullable => 0, size => 11 },
-  "note",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 255,
-  },
+    'security_code_id',
+    { data_type => 'INT', default_value => 0, is_nullable => 0, size => 11 },
+    'user_id',
+    { data_type => 'INT', default_value => 0, is_nullable => 0, size => 11 },
+    'type',
+    {   data_type     => 'TINYINT',
+        default_value => 0,
+        is_nullable   => 0,
+        size          => 1
+    },
+    'code',
+    {   data_type     => 'VARCHAR',
+        default_value => undef,
+        is_nullable   => 0,
+        size          => 12,
+    },
+    'time',
+    { data_type => 'INT', default_value => 0, is_nullable => 0, size => 11 },
+    'note',
+    {   data_type     => 'VARCHAR',
+        default_value => undef,
+        is_nullable   => 1,
+        size          => 255,
+    },
 );
-__PACKAGE__->set_primary_key("security_code_id");
+__PACKAGE__->set_primary_key('security_code_id');
 
 __PACKAGE__->resultset_class('Foorum::ResultSet::SecurityCode');
 
@@ -77,6 +79,12 @@ NOT NULL
 INT(11)
 
 NOT NULL
+
+=item note
+
+VARCHAR(255)
+
+
 
 =back
 

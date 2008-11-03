@@ -2,7 +2,7 @@ package Foorum::Controller::Topic;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/encodeHTML get_page_from_url generate_random_word/;
 use Foorum::XUtils qw/theschwartz/;
@@ -24,7 +24,7 @@ sub topic : Regex('^forum/(\w+)/(topic/)?(\d+)$') {
         = ( $c->req->path =~ /\/rss(\/|$)/ ) ? 1 : 0; # /forum/ForumName/1/rss
 
     my $format = $c->req->param('format');
-    if ( $format and $format eq 'pdf' ) {
+    if ( $format and 'pdf' eq $format ) {
         unless ( $c->config->{function_on}->{topic_pdf} ) {
             $c->detach( '/print_error', ['Function Disabled'] );
         }
@@ -108,8 +108,10 @@ sub topic : Regex('^forum/(\w+)/(topic/)?(\d+)$') {
         if ( $c->req->path =~ /\/print(\/|$)/ ) {
             $c->stash->{template} = 'topic/print.html';
         } else {
+
             # previous / next topic
-            my @topic_ids = $c->model('DBIC::Topic')->get_topic_id_list( $forum_id );
+            my @topic_ids
+                = $c->model('DBIC::Topic')->get_topic_id_list($forum_id);
             my $place = firstidx { $_ == $topic_id } @topic_ids;
             if ( $place > 0 and $topic_ids[ $place - 1 ] ) {
                 $c->stash->{previous_topic_id} = $topic_ids[ $place - 1 ];
@@ -117,7 +119,7 @@ sub topic : Regex('^forum/(\w+)/(topic/)?(\d+)$') {
             if ( $place < $#topic_ids and $topic_ids[ $place + 1 ] ) {
                 $c->stash->{next_topic_id} = $topic_ids[ $place + 1 ];
             }
-            
+
             $c->stash->{whos_view_this_page} = 1;
             $c->stash->{template}            = 'topic/index.html';
         }
@@ -172,7 +174,7 @@ sub create : Regex('^forum/(\w+)/topic/new$') {
     my $text      = $c->req->param('text');
 
     # only admin has HTML rights
-    if ( $formatter eq 'html' ) {
+    if ( 'html' eq $formatter ) {
         my $is_admin = $c->model('Policy')->is_admin( $c, 'site' );
         $formatter = 'plain' unless ($is_admin);
     }

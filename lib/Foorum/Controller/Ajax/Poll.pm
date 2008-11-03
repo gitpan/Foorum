@@ -2,7 +2,7 @@ package Foorum::Controller::Ajax::Poll;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 
 sub vote : Local {
@@ -40,9 +40,9 @@ sub vote : Local {
             {   poll_id   => $poll_id,
                 option_id => $_,
             }
-        )->update( { vote_no => \"vote_no + 1", } );
+        )->update( { vote_no => \'vote_no + 1', } );
         $c->log->debug("has_it: $has_it");
-        if ( $has_it and $has_it ne '0E0' ) {
+        if ( $has_it and '0E0' ne $has_it ) {
             $c->model('DBIC::PollResult')->create(
                 {   poll_id   => $poll_id,
                     option_id => $_,

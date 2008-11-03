@@ -2,7 +2,7 @@ package Foorum::Controller::Forum;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -256,16 +256,16 @@ sub members : Chained('forum') Args {
     my $forum_code = $forum->{forum_code};
 
     $member_type ||= 'user';
-    if (    $member_type ne 'pending'
-        and $member_type ne 'blocked'
-        and $member_type ne 'rejected' ) {
+    if (    'pending' ne $member_type
+        and 'blocked'  ne $member_type
+        and 'rejected' ne $member_type ) {
         $member_type = 'user';
     }
 
     my $page = get_page_from_url( $c->req->path );
 
     my ( @query_cols, @attr_cols );
-    if ( $member_type eq 'user' ) {
+    if ( 'user' eq $member_type ) {
         @query_cols = ( 'status', [ 'admin', 'moderator', 'user' ] );
         @attr_cols = ( 'order_by' => 'status ASC' );
     } else {

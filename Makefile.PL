@@ -4,7 +4,7 @@ name            ('Foorum');
 author          ('Fayland Lam<fayland@gmail.com>');
 abstract        ('Foorum - forum system based on Catalyst');
 license         ('perl');
-version_from    ('lib/Foorum/Version.pm');
+version_from    ('lib/Foorum.pm');
 
 requires 'Template' => '2.20';
 requires 'DBIx::Class';
@@ -46,7 +46,7 @@ requires 'Locale::Country::Multilingual' => '0.03'; # for tw lang
 #requires 'File::Slurp';
 requires 'Net::IP::Match::Regexp';
 requires 'Net::CIDR::Lite';
-requires 'WWW::Contact';
+requires 'WWW::Contact' => '0.06'; # the last version
 
 # search
 requires 'Sphinx::Search';
@@ -83,6 +83,7 @@ feature 'Be a Foorum developer',
     'Perl::Tidy'            => 0,
     'SQL::Translator'       => 0,
     'DBICx:::AutoDoc'       => 0,
+    'Acme::PlayCode'        => '0.05',
     'Pod::From::GoogleWiki' => '0.05';
 
 # formatter

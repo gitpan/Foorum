@@ -2,7 +2,7 @@ package Foorum::ResultSet::ScheduledEmail;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'DBIx::Class::ResultSet';
 
 use Foorum::Utils qw/generate_random_word/;
@@ -83,7 +83,7 @@ sub create_email {
             = "$base_path/templates/lang/$lang/email/$template_name";
         if ( -e $file_prefix . '.txt' or -e $file_prefix . '.html' ) {
             $template_prefix = "lang/$lang/email/$template_name";
-        } elsif ( $lang ne 'en' ) {
+        } elsif ( 'en' ne $lang ) {
 
             # try to use lang=en for default
             $file_prefix

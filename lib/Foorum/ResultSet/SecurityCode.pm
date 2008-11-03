@@ -2,7 +2,7 @@ package Foorum::ResultSet::SecurityCode;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'DBIx::Class::ResultSet';
 
 use Foorum::Utils qw/generate_random_word/;
@@ -25,7 +25,7 @@ sub get {
     )->first;
     return unless ($rs);
 
-    if ( wantarray ) {
+    if (wantarray) {
         return ( $rs->code, $rs->note );
     } else {
         return $rs->code;
@@ -34,7 +34,7 @@ sub get {
 
 sub get_or_create {
     my ( $self, $type, $user_id, $note ) = @_;
-    
+
     $type = $types{$type} if ( exists $types{$type} );
     return unless ($type);
 

@@ -2,7 +2,7 @@ package Foorum::TheSchwartz::Worker::SendStarredNofication;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base qw( MooseX::TheSchwartz::Worker );
 use Foorum::SUtils qw/schema/;
 use Foorum::XUtils qw/config base_path cache/;
@@ -64,7 +64,7 @@ sub get_object {
 
     my $user_model = $schema->resultset('User');
 
-    if ( $object_type eq 'topic' ) {
+    if ( 'topic' eq $object_type ) {
         my $object = $schema->resultset('Topic')
             ->find( { topic_id => $object_id, } );
         return unless ($object);
@@ -77,7 +77,7 @@ sub get_object {
             url         => '/forum/' . $object->forum_id . "/$object_id",
             last_update => $object->last_update_date,
         };
-    } elsif ( $object_type eq 'poll' ) {
+    } elsif ( 'poll' eq $object_type ) {
         my $object
             = $schema->resultset('Poll')->find( { poll_id => $object_id, } );
         return unless ($object);

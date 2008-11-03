@@ -1,15 +1,16 @@
 package Foorum::Search::Sphinx;
 
 use Moose;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use Sphinx::Search;
 use Foorum::SUtils qw/schema/;
 
 has 'sphinx' => (
-    is  => 'ro',
-    isa => 'Sphinx::Search',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'Sphinx::Search',
+    lazy    => 1,
     default => sub {
+
         # check if Sphinx is available
         # YYY? TODO, make localhost/3312 configurable
         my $sphinx = Sphinx::Search->new();
@@ -19,9 +20,9 @@ has 'sphinx' => (
 );
 
 has 'schema' => (
-    is => 'ro',
-    isa => 'Object',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'Object',
+    lazy    => 1,
     default => sub { schema() },
 );
 
@@ -67,7 +68,7 @@ sub topic {
         }
     }
 
-    $order_by = 'last_update_date' if ( $order_by ne 'post_on' );
+    $order_by = 'last_update_date' if ( 'post_on' ne $order_by );
     $sphinx->SetSortMode( SPH_SORT_ATTR_DESC, $order_by );
     $sphinx->SetMatchMode(SPH_MATCH_ANY);
     $sphinx->SetLimits( ( $page - 1 ) * $per_page, $per_page,

@@ -2,7 +2,7 @@ package Foorum::Controller::Admin::BanIP;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Net::CIDR::Lite;
 
@@ -26,7 +26,7 @@ sub default : Private {
         my $cidr = Net::CIDR::Lite->new;
         $cidr->add( $_->cidr_ip );
         my @ip_ranges = $cidr->list_range;
-        $_->{range} = join( " | ", @ip_ranges );
+        $_->{range} = join( ' | ', @ip_ranges );
     }
     $c->stash->{cidr_ips} = \@cidr_ips;
 

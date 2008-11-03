@@ -2,7 +2,7 @@ package Foorum::Controller::Site;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -14,7 +14,7 @@ sub recent : Local {
 
     my @extra_cols;
     my $url_prefix;
-    if ( $recent_type eq 'elite' ) {
+    if ( 'elite' eq $recent_type ) {
         @extra_cols = ( 'elite', 1 );
         $url_prefix = '/site/recent/elite';
     } else {

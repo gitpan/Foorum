@@ -2,7 +2,7 @@ package Foorum::Controller::Admin::User;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 
@@ -68,22 +68,22 @@ sub edit : Local {
         foreach my $key ( keys %$query ) {
 
             # DONOT update the user_id here
-            next if ( $key eq 'user_id' );
+            next if ( 'user_id' eq $key );
 
             # user has this column
             if ( grep { $_ eq $key } @columns ) {
-                if ( $key eq 'username' ) {
+                if ( 'username' eq $key ) {
 
                     # validate username
                     my $ERROR_USERNAME = $c->model('DBIC::User')
                         ->validate_username( $query->{username} );
                     next if ($ERROR_USERNAME);
-                } elsif ( $key eq 'email' ) {
+                } elsif ( 'email' eq $key ) {
 
                     # validate email
                     my $err = $c->model('DBIC::User')->validate_email($email);
                     next if ($err);
-                } elsif ( $key eq 'status'
+                } elsif ( 'status' eq $key
                     and $user->{status} ne $query->{status} ) {
                     $c->model('Log')->log_action(
                         $c,

@@ -2,7 +2,7 @@ package Foorum::Controller::Register;
 
 use strict;
 use warnings;
-use Foorum::Version; our $VERSION = $Foorum::VERSION;
+our $VERSION = '0.003001';
 use base 'Catalyst::Controller';
 use Digest ();
 use WWW::Contact;
@@ -119,17 +119,14 @@ sub activation : Local {
 
     # validate it
     if ( $activation_rs->activation_code eq $activation_code ) {
-        $c->model('DBIC::User')->update_user(
-            $user,
-            {   status => 'verified',
-            }
-        );
+        $c->model('DBIC::User')
+            ->update_user( $user, { status => 'verified', } );
         $activation_rs->delete;
 
 # login will be failed since the $user->password is SHA1 Hashed.
 # $c->login( $username, $user->{password} );
 # so instead, we use set_authenticated, check Catalyst::Plugin::Authentication
-        bless $user, "Catalyst::Authentication::User::Hash";    # XXX?
+        bless $user, 'Catalyst::Authentication::User::Hash';    # XXX?
         $c->set_authenticated($user);
 
         # send a welcome email
