@@ -46,13 +46,13 @@ requires 'Locale::Country::Multilingual' => '0.03'; # for tw lang
 #requires 'File::Slurp';
 requires 'Net::IP::Match::Regexp';
 requires 'Net::CIDR::Lite';
-requires 'WWW::Contact' => '0.06'; # the last version
+requires 'WWW::Contact' => '0.17'; # the last version
 
 # search
 requires 'Sphinx::Search';
 
 # cron
-requires 'MooseX::TheSchwartz';
+requires 'TheSchwartz::Moosified';
 requires 'Schedule::Cron';
 if ($^O ne 'MSWin32') {
     feature 'Cron script run-once',
@@ -88,6 +88,7 @@ feature 'Be a Foorum developer',
 
 # formatter
 requires 'Text::Textile';
+requires 'Pod::Xhtml';
 requires 'URI::Find::UTF8';
 requires 'Text::GooglewikiFormat' => '0.04';
 

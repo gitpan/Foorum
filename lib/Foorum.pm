@@ -18,7 +18,7 @@ use Catalyst qw/
     +Foorum::Plugin::FoorumUtils
     /;
 
-our $VERSION = '1.000000';
+our $VERSION = '1.000001';
 
 __PACKAGE__->config( { VERSION => $VERSION } );
 __PACKAGE__->config( 'config_file' => [ 'foorum.yml', 'foorum_local.yml' ] );
@@ -91,7 +91,7 @@ use L<Cache::Memcached> or use L<Cache::FileCache> or others;
 
 =item reliable job queue
 
-use L<MooseX::TheSchwartz>
+use L<TheSchwartz::Moosified>
 
 =item Multi Formatter
 

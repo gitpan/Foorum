@@ -2,8 +2,8 @@ package Foorum::TheSchwartz::Worker::Every15Min;
 
 use strict;
 use warnings;
-our $VERSION = '1.000000';
-use base qw( MooseX::TheSchwartz::Worker );
+our $VERSION = '1.000001';
+use base qw( TheSchwartz::Moosified::Worker );
 use Data::Dump qw/dump/;
 use Foorum::SUtils qw/schema/;
 use Foorum::Logger qw/error_log/;
