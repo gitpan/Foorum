@@ -1,5 +1,8 @@
 This file documents the revision history for Foorum.
 
+1.0.5   2009.02.21
+    - fix RSS+XML first newline for Firefox
+
 1.0.4   2009.02.10
     - use ConfigLoader instead of Config::YAML::XS
 
@@ -10,7 +13,7 @@ This file documents the revision history for Foorum.
     - try to fix broken CPAN dist
 
 1.0.1	2008.11.19
-	- requires 'Pod::Xhtml';
-	- replace 'MooseX::TheSchwartz' to 'TheSchwartz::Moosified'
+    - requires 'Pod::Xhtml';
+    - replace 'MooseX::TheSchwartz' to 'TheSchwartz::Moosified'
 
-More Changes log can be found in 'Changes2'. Thanks.
+More Changes >> 'Changes2'. Thanks.

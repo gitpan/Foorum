@@ -2,7 +2,7 @@ package Foorum::Controller::Forum;
 
 use strict;
 use warnings;
-our $VERSION = '1.000004';
+our $VERSION = '1.000005';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -418,7 +418,7 @@ sub create : Local {
     }
 
     # insert data into table.
-    my $policy = ( $private == 1 ) ? 'private' : 'public';
+    my $policy = ( $private and $private == 1 ) ? 'private' : 'public';
     my $forum = $c->model('DBIC::Forum')->create(
         {   name          => $name,
             forum_code    => $forum_code,

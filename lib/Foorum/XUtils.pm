@@ -3,12 +3,12 @@ package Foorum::XUtils;
 use strict;
 use warnings;
 
-our $VERSION = '1.000004';
+our $VERSION = '1.000005';
 
-use YAML::XS qw/LoadFile/;    # config
-use TheSchwartz::Moosified;      # theschwartz
+use YAML::XS qw/LoadFile/;     # config
+use TheSchwartz::Moosified;    # theschwartz
 use DBI;
-use Template;                 # template
+use Template;                  # template
 use Template::Stash::XS;
 use base 'Exporter';
 use vars qw/@EXPORT_OK $base_path $config $cache $tt2 $theschwartz/;

@@ -4,7 +4,7 @@ use strict;
 
 BEGIN {
     $ENV{CATALYST_ENGINE} ||= 'HTTP';
-    $ENV{CATALYST_SCRIPT_GEN} = 31;
+    $ENV{CATALYST_SCRIPT_GEN} = 32;
     require Catalyst::Engine::HTTP;
 }
 
@@ -14,7 +14,6 @@ use Pod::Usage;
 use FindBin;
 use File::Spec;
 use lib File::Spec->catdir( $FindBin::Bin, '..', 'lib' );
-
 my $debug             = 0;
 my $fork              = 0;
 my $help              = 0;
@@ -106,10 +105,9 @@ foorum_server.pl [options]
 
 Run a Catalyst Testserver for this application.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Sebastian Riedel, C<sri@oook.de>
-Maintained by the Catalyst Core Team.
+Catalyst Contributors, see Catalyst.pm
 
 =head1 COPYRIGHT
 

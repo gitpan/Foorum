@@ -2,7 +2,7 @@ package Foorum::TheSchwartz::Worker::SendScheduledEmail;
 
 use strict;
 use warnings;
-our $VERSION = '1.000004';
+our $VERSION = '1.000005';
 use base qw( TheSchwartz::Moosified::Worker );
 use Foorum::SUtils qw/schema/;
 use Foorum::Logger qw/error_log/;
@@ -52,7 +52,7 @@ if ( -e File::Spec->catfile( $base_path, 'conf', 'mail.yml' ) ) {
 } else {
     $config = LoadFile(
         File::Spec->catfile(
-            $base_path, 'conf', 'examples', 'mail', 'mail.yml'
+            $base_path, 'conf', 'examples', 'mail', 'sendmail.yml'
         )
     );
 }
