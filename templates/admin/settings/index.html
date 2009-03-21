@@ -1,8 +1,6 @@
 [% USE FillInForm %]
 
 [% c.load_once("jquery.ui/smoothness/jquery-ui-1.7.custom.css") %]
-[% c.load_once("jquery/validate.js") %]
-
 
 [% WRAPPER 'admin/bar.html' %]
 
@@ -18,6 +16,11 @@
 	<tr class='misc1'>
 	    <td align='right'><label for='site_domain'>Site Domain:</label></td>
 	    <td><input type='text' name='site_domain' id='site_domain' value='[% c.req.base %]' size='32' /></td>
+	</tr>
+	<tr class='misc2'>
+	    <td align='right'><label for='site_domain'>Server TimeZone diff:</label></td>
+	    <td><input type='text' name='timezonediff' id='timezonediff' value='0' size='2' />
+	        Suggested Value: [% suggested_timezone_diff %]</td>
 	</tr>
 	<tr class='title'><td colspan='2'>Function On/Off</td></tr>
 	<tr class='misc1'>
