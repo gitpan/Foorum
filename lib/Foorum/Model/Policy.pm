@@ -2,13 +2,14 @@ package Foorum::Model::Policy;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Model';
 
 sub fill_user_role {
     my ( $self, $c, $field ) = @_;
 
-    my $roles = $c->user->{roles};
+    my $roles = {};
+    $roles = $c->user->{roles} if $c->user_exists;
     $field ||= 'site';
 
     if ( $roles->{$field}->{user} ) {

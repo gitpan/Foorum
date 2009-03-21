@@ -2,7 +2,7 @@ package Foorum::Controller::Forum;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -296,13 +296,10 @@ sub members : Chained('forum') Args {
         %members = map { $_->user_id => $_ } @members;
     }
 
-    my $url_prefix = $forum->{forum_url} . "/members/$member_type";
-
     $c->stash(
         {   template            => 'forum/members.html',
             member_type         => $member_type,
             pager               => $rs->pager,
-            url_prefix          => $url_prefix,
             user_roles          => \@user_roles,
             whos_view_this_page => 1,
             members             => \%members,

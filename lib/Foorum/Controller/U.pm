@@ -2,7 +2,7 @@ package Foorum::Controller::U;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 
@@ -120,7 +120,6 @@ sub shared : LocalRegex('^(\w+)/shared$') {
         {   template     => 'u/shared.html',
             shared_items => \@shared_items,
             pager        => $rs->pager,
-            url_prefix   => "/u/$username/shared",
         }
     );
 }
@@ -149,7 +148,6 @@ sub topics : LocalRegex('^(\w+)/topics$') {
             topics      => [ $rs->all ],
             pager       => $rs->pager,
             recent_type => 'my',
-            url_prefix  => "/u/$username/topics",
         }
     );
 }

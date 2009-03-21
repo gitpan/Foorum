@@ -2,7 +2,7 @@ package Foorum::Controller::Profile;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::XUtils qw/theschwartz/;
 use Digest ();
@@ -121,7 +121,7 @@ sub change_password : Local {
     if ( $username and $security_code ) {
 
         # check if that's mataches.
-        $user = $c->model('User')->get( { username => $username } );
+        $user = $c->model('DBIC::User')->get( { username => $username } );
         if ($user) {
             my $security_code2 = $c->model('DBIC::SecurityCode')
                 ->get( 'forget_password', $user->{user_id} );
@@ -178,14 +178,7 @@ sub change_password : Local {
             ->remove( 'forget_password', $user->{user_id} );
     }
 
-    $c->detach(
-        '/print_message',
-        [   {   msg          => 'Reset Password OK',
-                url          => '/profile/edit',
-                stay_in_page => 1,
-            }
-        ]
-    );
+    $c->res->redirect('/profile/edit?info=101');
 }
 
 sub forget_password : Local {
@@ -227,15 +220,8 @@ sub forget_password : Local {
             }
         }
     );
-    $c->detach(
-        '/print_message',
-        [   {   msg =>
-                    'The instruction to rest your password is sent to your email, please have a check',
-                url          => '/',
-                stay_in_page => 1,
-            }
-        ]
-    );
+
+    $c->res->redirect('/?info=102');
 }
 
 sub change_email : Local {

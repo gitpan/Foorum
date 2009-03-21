@@ -18,7 +18,7 @@ use Catalyst qw/
     +Foorum::Plugin::FoorumUtils
     /;
 
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 
 __PACKAGE__->config( { VERSION => $VERSION } );
 
@@ -26,6 +26,24 @@ __PACKAGE__->setup();
 
 if ( __PACKAGE__->config->{function_on}->{page_cache} ) {
     __PACKAGE__->setup_plugins( ['PageCache'] );
+
+    ## set $c->language before create a key in PageCache
+    __PACKAGE__->config->{'Plugin::PageCache'}->{key_maker} = sub {
+        my $c = shift;
+
+        # something as the same as in Root.pm
+        # while it is called before we call sub auto in Root.pm
+        # and we may not call this if request doesn't call $c->cache_page
+        my $lang;
+        $lang = $c->req->cookie('lang')->value if ( $c->req->cookie('lang') );
+        $lang ||= $c->user->lang if ( $c->user_exists );
+        $lang ||= $c->config->{default_lang};
+        $lang = $c->req->param('lang') if ( $c->req->param('lang') );
+        $lang =~ s/\W+//isg;
+        $c->languages( [$lang] );
+
+        return '/' . $c->req->path;
+    };
 } else {
     {
         no strict 'refs';    ## no critic (ProhibitNoStrict)
@@ -34,24 +52,6 @@ if ( __PACKAGE__->config->{function_on}->{page_cache} ) {
         *{"$class\::clear_cached_page"} = sub {1};
     }
 }
-
-## set $c->language before create a key in PageCache
-__PACKAGE__->config->{'Plugin::PageCache'}->{key_maker} = sub {
-    my $c = shift;
-
-    # something as the same as in Root.pm
-    # while it is called before we call sub auto in Root.pm
-    # and we may not call this if request doesn't call $c->cache_page
-    my $lang;
-    $lang = $c->req->cookie('lang')->value if ( $c->req->cookie('lang') );
-    $lang ||= $c->user->lang if ( $c->user_exists );
-    $lang ||= $c->config->{default_lang};
-    $lang = $c->req->param('lang') if ( $c->req->param('lang') );
-    $lang =~ s/\W+//isg;
-    $c->languages( [$lang] );
-
-    return '/' . $c->req->path;
-};
 
 1;
 __END__
@@ -74,7 +74,7 @@ L<http://www.foorumbbs.com/>
 
 =item open source
 
-u can FETCH all code from L<http://foorum.googlecode.com/svn/trunk/> any time any where.
+u can FETCH all code from L<http://github.com/fayland/foorum/tree> any time any where.
 
 =item Win32 compatibility
 
@@ -104,7 +104,7 @@ To keep robot out.
 
 =head1 JOIN US
 
-please send me an email to add u into the google.code Project members list.
+Welcome to fork it in L<http://github.com/fayland/foorum/tree> and pull requests back.
 
 =head1 TODO
 

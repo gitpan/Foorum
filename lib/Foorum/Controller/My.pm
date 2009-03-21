@@ -2,7 +2,7 @@ package Foorum::Controller::My;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 
@@ -47,7 +47,6 @@ sub starred : Local {
         {   template      => 'my/starred.html',
             starred_items => \@starred_items,
             pager         => $rs->pager,
-            url_prefix    => '/my/starred',
         }
     );
 }

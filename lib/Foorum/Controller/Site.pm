@@ -2,7 +2,7 @@ package Foorum::Controller::Site;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -13,13 +13,10 @@ sub recent : Local {
     my $rss = ( $c->req->path =~ /\/rss(\/|$)/ ) ? 1 : 0;   # /site/recent/rss
 
     my @extra_cols;
-    my $url_prefix;
     if ( 'elite' eq $recent_type ) {
         @extra_cols = ( 'elite', 1 );
-        $url_prefix = '/site/recent/elite';
     } else {
         $recent_type = 'site';
-        $url_prefix  = '/site/recent';
     }
 
     my $page = get_page_from_url( $c->req->path );
@@ -37,11 +34,7 @@ sub recent : Local {
         }
     );
 
-    $c->stash(
-        {   recent_type => $recent_type,
-            url_prefix  => $url_prefix,
-        }
-    );
+    $c->stash( { recent_type => $recent_type, } );
 
     my @topics = $rs->all;
     if ($rss) {
@@ -116,10 +109,9 @@ sub members : Local {
     );
 
     $c->stash(
-        {   users      => [ $rs->all ],
-            pager      => $rs->pager,
-            url_prefix => '/site/members',
-            template   => 'site/user.html',
+        {   users    => [ $rs->all ],
+            pager    => $rs->pager,
+            template => 'site/user.html',
         }
     );
 }

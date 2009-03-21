@@ -2,7 +2,7 @@ package Foorum::Controller::Site::Popular;
 
 use strict;
 use warnings;
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 use Foorum::Formatter qw/filter_format/;
@@ -54,9 +54,6 @@ sub default : Private {
         push @objects, $object;
     }
 
-    my $url_prefix = $c->req->path;
-    $url_prefix =~ s/\/page=\d+(\/|$)/$1/isg;
-
     if ($rss) {
         foreach (@objects) {
             my $rs = $c->model('DBIC::Comment')->find(
@@ -85,10 +82,9 @@ sub default : Private {
     } else {
         $c->cache_page('300');
         $c->stash(
-            {   template   => 'site/popular.html',
-                pager      => $hit_rs->pager,
-                objects    => \@objects,
-                url_prefix => '/' . $url_prefix
+            {   template => 'site/popular.html',
+                pager    => $hit_rs->pager,
+                objects  => \@objects,
             }
         );
     }
