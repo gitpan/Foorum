@@ -2,11 +2,14 @@ package Foorum::Controller::Admin;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 
 sub auto : Private {
     my ( $self, $c ) = @_;
+
+    # default template
+    $c->stash->{template} = 'admin/index.html';
 
     unless ( $c->user_exists ) {
         $c->res->redirect('/login');
@@ -25,7 +28,6 @@ sub auto : Private {
 sub default : Private {
     my ( $self, $c ) = @_;
 
-    $c->stash->{template} = 'admin/index.html';
 }
 
 1;

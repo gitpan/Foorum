@@ -2,7 +2,7 @@ package Foorum::Controller::Admin::User;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 
@@ -106,7 +106,7 @@ sub edit : Local {
         if ( $c->user->user_id == $c->req->param('user_id') ) {
             $c->session->{__user} = $c->req->param('username');
         }
-        return $c->res->redirect('/admin?m=OK');
+        return $c->res->redirect('/admin?st=1');
     }
 }
 

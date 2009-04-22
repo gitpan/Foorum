@@ -2,7 +2,7 @@ package Foorum::Controller::TopicAction;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 
 sub lock_or_sticky_or_elite :
@@ -65,7 +65,7 @@ sub lock_or_sticky_or_elite :
     }
 
     my $url = $c->req->referer || $forum->{forum_url};
-    $c->res->redirect("$url?info=1");
+    $c->res->redirect("$url?st=1");
 }
 
 sub ban_or_unban_topic : Regex('^forum/(\w+)/topic/(\d+)/(un)?ban$') {
@@ -95,7 +95,7 @@ sub ban_or_unban_topic : Regex('^forum/(\w+)/topic/(\d+)/(un)?ban$') {
     }
 
     my $url = $c->req->referer || $forum->{forum_url};
-    $c->res->redirect("$url?info=1");
+    $c->res->redirect("$url?st=1");
 }
 
 1;

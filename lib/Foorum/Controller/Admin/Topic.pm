@@ -2,7 +2,7 @@ package Foorum::Controller::Admin::Topic;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/get_page_from_url/;
 
@@ -36,6 +36,17 @@ sub default : Private {
             pager    => $rs->pager,
         }
     );
+
+    # get all forums for Move
+    my @forums = $c->model('DBIC')->resultset('Forum')->search(
+        {   forum_type => 'classical',
+            status     => { '!=', 'banned' },
+        },
+        {   order_by => 'me.forum_id',
+            columns  => [ 'forum_id', 'name' ],
+        }
+    )->all;
+    $c->stash->{forums} = \@forums;
 }
 
 sub batch : Local {
@@ -60,10 +71,15 @@ sub batch : Local {
                     operator_id => $c->user->user_id
                 }
             );
+        } elsif ( $do eq 'move' ) {
+            my $to_fid = $c->req->param('to_fid');
+            if ( $to_fid =~ /^\d+$/ ) {
+                $c->model('DBIC::Topic')->move( $topic_id, $to_fid );
+            }
         }
     }
 
-    $c->res->redirect('/admin/topic?info=1');
+    $c->res->redirect('/admin/topic?st=1');
 }
 
 1;

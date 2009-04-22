@@ -2,7 +2,7 @@ package Foorum::Controller::Topic;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 use Foorum::Utils qw/encodeHTML get_page_from_url generate_random_word/;
 use Foorum::XUtils qw/theschwartz/;
@@ -206,14 +206,6 @@ sub create : Regex('^forum/(\w+)/topic/new$') {
             user_id     => $c->user->user_id,
             post_ip     => $c->req->address,
             lang        => $c->stash->{lang},
-        }
-    );
-
-    # update forum
-    $c->model('DBIC::Forum')->update_forum(
-        $forum_id,
-        {   total_topics => \'total_topics + 1',    #'
-            last_post_id => $topic->topic_id,
         }
     );
 

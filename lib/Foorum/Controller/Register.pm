@@ -2,7 +2,7 @@ package Foorum::Controller::Register;
 
 use strict;
 use warnings;
-our $VERSION = '1.000007';
+our $VERSION = '1.000008';
 use base 'Catalyst::Controller';
 use Digest ();
 use WWW::Contact;
@@ -75,7 +75,7 @@ sub default : Private {
 
     $c->authenticate( { username => $username, password => $password } );
 
-    $c->res->redirect('/?info=103');
+    $c->res->redirect('/?st=103');
 }
 
 sub activation : Local {

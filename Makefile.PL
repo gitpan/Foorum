@@ -9,9 +9,9 @@ version_from    ('lib/Foorum.pm');
 repository 'http://github.com/fayland/foorum/tree/master';
 
 requires 'Template' => '2.20';
-requires 'DBIx::Class';
-requires 'Catalyst' => '5.64';
-requires 'Moose'    => '0.57';
+requires 'DBIx::Class' => '0.08100';
+requires 'Catalyst' => '5.80002';
+requires 'Moose'    => '0.75';
 requires 'Digest';
 requires 'DateTime';
 requires 'Date::Calc';
@@ -20,17 +20,17 @@ requires 'File::Path';
 requires 'File::Copy';
 requires 'List::Util';
 requires 'List::MoreUtils';
-requires 'Catalyst::View::TT';
+requires 'Catalyst::View::TT' => '0.29';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'YAML::XS';
-requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::ConfigLoader' => '0.23';
 requires 'Cache::FileCache';
 requires 'Catalyst::Plugin::Cache';
 requires 'Catalyst::Plugin::PageCache' => '0.21';
 requires 'Set::Object';
-requires 'Catalyst::Plugin::Authentication' => '0.10004';
+requires 'Catalyst::Plugin::Authentication' => '0.10011';
 requires 'Catalyst::Plugin::Authentication::Credential::Password';
 requires 'Catalyst::Authentication::Store::FromSub::Hash' => '0.06';
 requires 'Catalyst::Plugin::Session';
@@ -49,7 +49,7 @@ requires 'Locale::Country::Multilingual' => '0.03'; # for tw lang
 #requires 'File::Slurp';
 requires 'Net::IP::Match::Regexp';
 requires 'Net::CIDR::Lite';
-requires 'WWW::Contact' => '0.20'; # the last version
+requires 'WWW::Contact' => '0.22'; # the last version
 
 # search
 requires 'Sphinx::Search';
