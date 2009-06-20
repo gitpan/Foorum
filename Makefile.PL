@@ -9,8 +9,8 @@ version_from    ('lib/Foorum.pm');
 repository 'http://github.com/fayland/foorum/tree/master';
 
 requires 'Template' => '2.20';
-requires 'DBIx::Class' => '0.08100';
-requires 'Catalyst' => '5.80002';
+requires 'DBIx::Class' => '0.08107';
+requires 'Catalyst' => '5.80005';
 requires 'Moose'    => '0.75';
 requires 'Digest';
 requires 'DateTime';
@@ -21,8 +21,8 @@ requires 'File::Copy';
 requires 'List::Util';
 requires 'List::MoreUtils';
 requires 'Catalyst::View::TT' => '0.29';
-requires 'Catalyst::View::JSON';
-requires 'Catalyst::Model::DBIC::Schema';
+requires 'Catalyst::View::JSON' => '0.25';
+requires 'Catalyst::Model::DBIC::Schema' => '0.24';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'YAML::XS';
 requires 'Catalyst::Plugin::ConfigLoader' => '0.23';
@@ -33,8 +33,8 @@ requires 'Set::Object';
 requires 'Catalyst::Plugin::Authentication' => '0.10011';
 requires 'Catalyst::Plugin::Authentication::Credential::Password';
 requires 'Catalyst::Authentication::Store::FromSub::Hash' => '0.06';
-requires 'Catalyst::Plugin::Session';
-requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::Session' => '0.190';
+requires 'Catalyst::Plugin::Session::State::Cookie' => '0.11';
 requires 'Catalyst::Plugin::Session::Store::Delegate'; # for DBIC next line
 requires 'Catalyst::Plugin::Session::Store::DBIC';
 requires 'Catalyst::Plugin::Session::DynamicExpiry';
@@ -67,6 +67,11 @@ if ($^O ne 'MSWin32') {
         -default          => 0,
         'File::HomeDir'   => 0;
 }
+
+# debug options
+feature 'Enable QueryLog debug for DBIx::Class Model?',
+    -default => 0,
+    'Catalyst::TraitFor::Model::DBIC::Schema::QueryLog' => 0;
 
 # mail
 requires 'MIME::Entity';
