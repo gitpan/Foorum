@@ -12,6 +12,7 @@ requires 'Template' => '2.20';
 requires 'DBIx::Class' => '0.08107';
 requires 'Catalyst' => '5.80005';
 requires 'Moose'    => '0.75';
+requires 'parent';
 requires 'Digest';
 requires 'DateTime';
 requires 'Date::Calc';
@@ -32,7 +33,7 @@ requires 'Catalyst::Plugin::PageCache' => '0.21';
 requires 'Set::Object';
 requires 'Catalyst::Plugin::Authentication' => '0.10011';
 requires 'Catalyst::Plugin::Authentication::Credential::Password';
-requires 'Catalyst::Authentication::Store::FromSub::Hash' => '0.06';
+requires 'Catalyst::Authentication::Store::FromSub' => '0.01';
 requires 'Catalyst::Plugin::Session' => '0.190';
 requires 'Catalyst::Plugin::Session::State::Cookie' => '0.11';
 requires 'Catalyst::Plugin::Session::Store::Delegate'; # for DBIC next line

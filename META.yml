@@ -20,7 +20,7 @@ no_index:
 requires:
   Cache::FileCache: 0
   Catalyst: 5.80005
-  Catalyst::Authentication::Store::FromSub::Hash: 0.06
+  Catalyst::Authentication::Store::FromSub: 0.01
   Catalyst::Model::DBIC::Schema: 0.24
   Catalyst::Plugin::Authentication: 0.10011
   Catalyst::Plugin::Authentication::Credential::Password: 0
@@ -68,7 +68,8 @@ requires:
   URI::Find::UTF8: 0
   WWW::Contact: 0.22
   YAML::XS: 0
+  parent: 0
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/fayland/foorum/tree/master
-version: 1.000009
+version: 1.001000

@@ -3,6 +3,8 @@ package Foorum;
 use strict;
 use warnings;
 
+use Catalyst::Runtime '5.70';
+use parent qw/Catalyst/;
 use Catalyst qw/
     ConfigLoader
     Static::Simple
@@ -18,7 +20,7 @@ use Catalyst qw/
     +Foorum::Plugin::FoorumUtils
     /;
 
-our $VERSION = '1.000009';
+our $VERSION = '1.001000';
 
 __PACKAGE__->config( { VERSION => $VERSION } );
 
